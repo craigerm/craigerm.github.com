@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: javascript | all things craig]]></title>
+  <link href="http://allthingscraig.com/blog/categories/javascript/atom.xml" rel="self"/>
+  <link href="http://allthingscraig.com/"/>
+  <updated>2018-03-15T14:56:38-04:00</updated>
+  <id>http://allthingscraig.com/</id>
+  <author>
+    <name><![CDATA[Craig MacGregor]]></name>
+    <email><![CDATA[craigerm@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Using HTML5 local storage to store objects]]></title>
+    <link href="http://allthingscraig.com/blog/2013/01/07/using-html5-local-storage-to-store-objects/"/>
+    <updated>2013-01-07T08:55:00-05:00</updated>
+    <id>http://allthingscraig.com/blog/2013/01/07/using-html5-local-storage-to-store-objects</id>
+    <content type="html"><![CDATA[<p>I've been experimenting with a few HTML5 features lately including localStorage in a backbone app.
+While localStorage is not technically part of HTML5 usually people group it
+together with HTML5 so I'll do the same here.
+If you're not familiar with localStorage there's a good introductory post
+<a href="http://tutorials.jenkov.com/html5/local-storage.html">here</a> (also discusses
+sessionStorage).</p>
+
+<h2>Limitation</h2>
+
+<p>One small limitation of using local storage is that it can only store strings.
+So if you want to store objects or arrays you will need to do some extra work.</p>
+
+<p>For example storing the following object won't work as expected:
+<code>javascript
+localStorage.setItem('obj', { name: 'John Smith', id: 500 });
+</code></p>
+
+<p>This will actually convert the object to a string which results in the
+following test to be true:</p>
+
+<p><code>javascript
+var item = localStorage.getItem('obj');
+expect(item).toBe('[object Object]');
+</code></p>
+
+<p>So what do we have to do to get this working as expected?</p>
+
+<h2>JSON.parse and JSON.stringify to the rescue</h2>
+
+<p>To get around you'll have to convert the object to a JSON
+string before adding it:</p>
+
+<p><code>javascript
+var json = JSON.stringify({ name: 'John Smith', id: 500 });
+localStorage.setItem('obj', json);
+</code></p>
+
+<p>And to retrieve this you need to then parse the object:
+<code>javascript
+var json = localStorage.getItem('obj');
+var obj = JSON.parse(json);
+</code></p>
+
+<h2>Better Approach</h2>
+
+<p>This can get a little annoying if you are storing several different objects in
+your app so I would recommend creating a wrapper class to handle the object
+(de)serialization.</p>
+
+<p>{% gist 4475414 %}</p>
+
+<p>This allows us to store objects and retrieve them
+```javascript</p>
+
+<p>// Create an instance of our storage wrapper
+var storage = new StorageWrapper();</p>
+
+<p>// Add the object to our storage
+storage.set('item', { price: 500, quantity: 3 });</p>
+
+<p>// Retrieve the object from our storage
+var obj = storage.get('item');</p>
+
+<p>// We can now work with the JSON object
+expect(obj.price * obj.quantity).toBe(1500);
+```</p>
+
+<h2>But what about older browsers?</h2>
+
+<p>Of course not all browsers support localStorage.
+To see if it is supported in your browser (You are using a modern browser
+right?) check out <a href="http://html5test.com">html5test.com</a>.</p>
+
+<p>Instead of changing the wrapper class to check if local storage exists (since
+that's not the responsibility of the wrapper) it would
+be better to use an HTML5 polyfill for this.
+I would recommend using a <a href="http://modernizr.com">Modernizr</a> polyfill
+to add this feature to older browsers.</p>
+
+<h2>Final Thoughts</h2>
+
+<p>Local storage is extremely useful for maintaining the state of dynamic web
+applications like single page applications or other backbone apps. It's usually
+a good idea to keep things <a href="http://en.wikipedia.org/wiki/Don't_repeat_yourself">DRY</a>
+by adding wrapper classes to any HTML5 feature that
+requires you to write extra code when using its API - like storing and
+retrieving objects via local storage.</p>
+
+<h2>Resources</h2>
+
+<ul>
+<li><a href="http://modernizr.com">List of Mozernizr polyfills</a></li>
+<li><a href="https://github.com/douglascrockford/JSON-js">JSON parser/stringify for older browsers</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Javascript Arrays: new vs []]]></title>
+    <link href="http://allthingscraig.com/blog/2013/01/02/creating-javascript-arrays/"/>
+    <updated>2013-01-02T08:52:00-05:00</updated>
+    <id>http://allthingscraig.com/blog/2013/01/02/creating-javascript-arrays</id>
+    <content type="html"><![CDATA[<p>My last <a href="/blog/2013/01/02/creating-javascript-objects/">post</a> quickly compared the performance
+of creating javsacript objects via <code>new object()</code> and <code>{}</code>.</p>
+
+<p>So for curiousity's sake let's do the same for arrays.</p>
+
+<p>We'll compare these two methods for instantiating arrays:
+```javascript</p>
+
+<p>  // Method 1: Using new operator
+  var arr1 = new Array();</p>
+
+<p>  // Method 2: Using literal syntax
+  var arr2 = [];
+```</p>
+
+<p>{% img /images/posts/array-results1.png %}
+{% img /images/posts/array-results2.png %}</p>
+
+<p>To no suprise the literal syntax is almost twice as fast.</p>
+
+<p>Unless you need to set the length when creating the array we should favour
+the the literal syntax of <code>var a = []</code> instead of the verbose <code>var a = new Array()</code>
+syntax for performance and readability.</p>
+]]></content>
+  </entry>
+  
+  <entry>
+    <title type="html"><![CDATA[Creating Javascript Objects: new vs {}]]></title>
+    <link href="http://allthingscraig.com/blog/2013/01/02/creating-javascript-objects/"/>
+    <updated>2013-01-02T08:15:00-05:00</updated>
+    <id>http://allthingscraig.com/blog/2013/01/02/creating-javascript-objects</id>
+    <content type="html"><![CDATA[<p>Recently I had a discussion with someone about creating javascript objects.</p>
+
+<p>There are two main ways of doing this:</p>
+
+<p>```javascript
+ // Method 1 - Using the new operator
+ var obj1 = new Object();</p>
+
+<p> // Method 2 - Using the literal syntax
+ var obj = {};
+```</p>
+
+<p>Now, most likely, you use the literal syntax. It is the standard that you will find
+out in the wild most of the time. And this is the method I use.</p>
+
+<p>I started using the literal syntax way-back-when to save keystrokes.
+At some point I was told that it was faster so I continued to use it.
+But I've never confirmed that it is actually faster.</p>
+
+<p>So is it really faster or is this just one of those old wise tales?</p>
+
+<p>Let's ask our dear friend <a href="http://jsperf.com">jsperf</a> and see what we can find.</p>
+
+<p>And I'm back :)</p>
+
+<p>Ok, based on using <code>new object()</code> and <code>{}</code> for object instantiation here are the results:</p>
+
+<p>{% img /images/posts/object-testcase.png %}
+{% img /images/posts/object-results.png %}</p>
+
+<p>Wow I didn't think it would be that much of a difference! Clearly the object literal is the way to go
+since it's significantly faster.</p>
+
+<p>I am only testing on the V8 javascript engine so maybe this won't apply to other browsers.
+I tried looking at the V8 source to see if I could'nt quickly find out exactly why this is happening
+but with no luck.
+My guess is that the constructor call is being executed for <code>new</code> and not for <code>{}</code>
+as an optimization trick for V8. When I have a more time I'd like to venture into the V8 source
+and see what's going on. So if I find something I'll post it here.</p>
+
+<p>From these results we can at least justifiably tell people that <code>{}</code> is not only easier on the eyes
+but also easier on the old processor.</p>
+]]></content>
+  </entry>
+  
+</feed>

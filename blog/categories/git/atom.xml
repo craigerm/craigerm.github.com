@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: git | all things craig]]></title>
+  <link href="http://allthingscraig.com/blog/categories/git/atom.xml" rel="self"/>
+  <link href="http://allthingscraig.com/"/>
+  <updated>2018-03-15T14:56:38-04:00</updated>
+  <id>http://allthingscraig.com/</id>
+  <author>
+    <name><![CDATA[Craig MacGregor]]></name>
+    <email><![CDATA[craigerm@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Remove your leftover git tracking branches ]]></title>
+    <link href="http://allthingscraig.com/blog/2012/01/25/remove-your-leftover-git-tracking-branches/"/>
+    <updated>2012-01-25T20:25:59-05:00</updated>
+    <id>http://allthingscraig.com/blog/2012/01/25/remove-your-leftover-git-tracking-branches</id>
+    <content type="html"><![CDATA[<p>Today I was helping out a co-worker with a git problem and when I looked at the branches in his repository (using "git status -a") I didn't see what I expected.  There were dozens and dozens of remote tracking branches in his repository that shouldn't have been there. All the branches that the team had developed in the last year still existed locally (as tracking branches) even though they had been deleted remotely by another developer. So I showed him the following git command:</p>
+
+<p><code>
+git remote prune origin
+</code></p>
+
+<p>This will delete any remote tracking branches that have been deleted in the remote repository (if your remote name is different replace "origin" with your remote name).</p>
+
+<p>As a result "git status -a" now shows what I expect on my co-worker's machine. This is a great little command when you work with a repository that has many remote feature branches created and deleted on a regular basis. I usually run the command every few weeks but it really only needs to be run when you think you think your git closet needs a little _declutter_ing .  The syntax is a little cryptic, so it's a good idea to <a href="http://davidwalsh.name/git-aliases">alias</a> it!</p>
+]]></content>
+  </entry>
+  
+</feed>

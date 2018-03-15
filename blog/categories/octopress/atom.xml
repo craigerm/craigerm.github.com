@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: octopress | all things craig]]></title>
+  <link href="http://allthingscraig.com/blog/categories/octopress/atom.xml" rel="self"/>
+  <link href="http://allthingscraig.com/"/>
+  <updated>2018-03-15T14:56:38-04:00</updated>
+  <id>http://allthingscraig.com/</id>
+  <author>
+    <name><![CDATA[Craig MacGregor]]></name>
+    <email><![CDATA[craigerm@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Email Obfuscator for Octopress]]></title>
+    <link href="http://allthingscraig.com/blog/2013/01/02/email-obfuscator-for-octopress/"/>
+    <updated>2013-01-02T12:53:00-05:00</updated>
+    <id>http://allthingscraig.com/blog/2013/01/02/email-obfuscator-for-octopress</id>
+    <content type="html"><![CDATA[<p>I want to include my email on my blog but I don't want to store it in plain text - for obvious reasons.
+Originally I was going to use a third party script to do this since I couldn't find an Octopress
+plugin that did what I was looking for.</p>
+
+<p>Instead I decided to write my first Octopress plugin.</p>
+
+<p>The plugin allows the following tag in markdown for obfuscating emails:
+<code>
+{% raw %}{% email test@example.com %}{% endraw %}
+</code></p>
+
+<p>This will render a script block that does the following:</p>
+
+<ul>
+<li>Encodes the <code>@</code> and <code>.</code> characters</li>
+<li>Encodes the <code>mailto:</code> prefix</li>
+<li>Reverses the email and uses CSS to display it to the user</li>
+</ul>
+
+
+<p>The output from the plugin looks something like:</p>
+
+<p>```html</p>
+
+<script type="text/javascript">
+document.write('<a style="unicode-bidi:bidi-override; direction: rtl;"href="&#109;&#97;&#105;&#108;&#116;&#111;&#58;test&#64;example&#46;com">moc&#46;elpmaxe&#64;tset</a>');
+</script>
+
+
+<p>```</p>
+
+<p>I'm currently using the plugin on this blog as of today. Hopefully this is of use to someone else too!</p>
+
+<h2>Resources</h2>
+
+<ul>
+<li><a href="https://github.com/craigerm/email-obfuscate-octopress">Source code on GitHub</a></li>
+<li><a href="http://techblog.tilllate.com/2008/07/20/ten-methods-to-obfuscate-e-mail-addresses-compared/">Nine ways to obfuscate an email</a></li>
+<li><a href="http://superuser.com/questions/235937/does-e-mail-address-obfuscation-actually-work">Superuser discussion on email obfuscation</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

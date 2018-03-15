@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: 
+
+Sitemap: http://allthingscraig.com/sitemap.xml 

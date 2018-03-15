@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: backbone | all things craig]]></title>
+  <link href="http://allthingscraig.com/blog/categories/backbone/atom.xml" rel="self"/>
+  <link href="http://allthingscraig.com/"/>
+  <updated>2018-03-15T14:56:38-04:00</updated>
+  <id>http://allthingscraig.com/</id>
+  <author>
+    <name><![CDATA[Craig MacGregor]]></name>
+    <email><![CDATA[craigerm@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[A Handlebars JSON helper]]></title>
+    <link href="http://allthingscraig.com/blog/2013/07/29/a-handlebars-json-helper/"/>
+    <updated>2013-07-29T12:17:00-04:00</updated>
+    <id>http://allthingscraig.com/blog/2013/07/29/a-handlebars-json-helper</id>
+    <content type="html"><![CDATA[<p>I've been working with Backbone pretty heavily over the last year with
+<a href="http://handlebarsjs.com">Handlebars</a> being used as the templating
+engine.</p>
+
+<p>For every project I usually end up adding a few helpers to Handlebars
+to aid in debugging. One of my favourites, and yet the simplest, is a helper to output
+an object (usually the model) to json inside the template.</p>
+
+<p>The helper itself is super simple but very useful for debugging:</p>
+
+<p>```coffeescript
+  # Coffeescript
+  Handlebars.registerHelper 'json', (obj) -></p>
+
+<pre><code>JSON.stringify(obj)
+</code></pre>
+
+<p><code>
+</code>javascript
+  // Javascript
+  Handlebars.registerHelper('json', function(obj) {</p>
+
+<pre><code>return JSON.stringify(obj);
+</code></pre>
+
+<p>  });
+```</p>
+
+<p>You would use this in any Handlebars view like so:</p>
+
+<p>```html
+{% raw %}
+  <div></p>
+
+<pre><code>&lt;!-- This will output the model to JSON --&gt;
+&lt;div&gt;{{json this}}&lt;/div&gt;
+
+&lt;!-- This will output the json further down the object graph --&gt;
+&lt;div&gt;{{json owner.followers}}&lt;/div&gt;
+</code></pre>
+
+<p>  </div>
+{% endraw %}
+```</p>
+
+<p>This is not something new.
+<a href="https://github.com/airbnb/rendr-handlebars/blob/master/shared/helpers.js#L53">Rendr</a> (from Airbnb)
+has this helper baked right in (although they escape the string, which is a
+good idea) - and I'm sure other frameworks have it or
+something similar.</p>
+
+<p>Anyway, I hope this helps someone starting out a new backbone/handlebars
+project or even for debugging an existing one!</p>
+]]></content>
+  </entry>
+  
+</feed>

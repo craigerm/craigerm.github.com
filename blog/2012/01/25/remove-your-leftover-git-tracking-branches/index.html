@@ -1,0 +1,348 @@
+
+
+<!doctype html>
+  <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+  <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+  <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+  <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Remove your leftover git tracking branches  - all things craig</title>
+    <meta name="author" content="Craig MacGregor">
+    
+    <meta name="description" content="Remove your leftover git tracking branches Jan 25th, 2012 git Today I was helping out a co-worker with a git problem and when I looked at the &hellip;">
+    
+    <meta name="viewport" content="width=device-width">
+    
+    <link rel="canonical" href="http://allthingscraig.com/blog/2012/01/25/remove-your-leftover-git-tracking-branches">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet">
+    <link href="/http://feeds.feedburner.com/AllThingsCraig" rel="alternate" title="all things craig" type="application/atom+xml">
+  </head>
+
+
+  <body >
+
+    <header>
+      <div class="grid-wrapper">
+  <div class="grid">
+
+    <div class="grid__item two-fifths lap-four-sixths palm-one-whole">
+  <a href="/" class="site-title">all things craig</a>
+</div>
+
+<div class="grid__item three-fifths lap-two-sixths palm-one-whole">
+  <nav>
+    <input type="checkbox" id="toggle">
+<label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu"></label>
+<ul class="menu pull-right">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/">Blog</a></li>
+  <li><a href="/about/">About</a></li>
+  <li><a href="/contact/">Contact</a></li>
+</ul>
+
+  </nav>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+    <div class="grid-wrapper">
+      <div class="grid grid-center">
+        
+        <div class="grid__item two-thirds lap-one-whole palm-one-whole">
+        
+
+          <article class="post">
+  <header>
+  
+  <h1 class="title indent">Remove your leftover git tracking branches </h1>
+  
+
+  
+  <div class="meta clearfix">
+    
+
+
+
+
+
+
+
+
+  
+
+
+<time class="pull-left" datetime="2012-01-25T20:25:59-05:00" pubdate data-updated="true"><i class="icon-calendar"></i> Jan 25<span>th</span>, 2012</time>
+    
+
+
+
+  
+  <div class="pull-left">
+    <i class="icon-tags"></i>
+    <ul class="tags unstyled">
+    
+      <li><a href="/blog/categories/git/">git</a></li>
+    
+    </ul>
+  </div>
+  
+
+    
+  </div>
+  
+</header>
+
+
+
+
+  <p>Today I was helping out a co-worker with a git problem and when I looked at the branches in his repository (using &#8220;git status -a&#8221;) I didn&#8217;t see what I expected.  There were dozens and dozens of remote tracking branches in his repository that shouldn&#8217;t have been there. All the branches that the team had developed in the last year still existed locally (as tracking branches) even though they had been deleted remotely by another developer. So I showed him the following git command:</p>
+
+<figure class='code'><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class=''><span class='line'>git remote prune origin</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This will delete any remote tracking branches that have been deleted in the remote repository (if your remote name is different replace &#8220;origin&#8221; with your remote name).</p>
+
+<p>As a result &#8220;git status -a&#8221; now shows what I expect on my co-worker&#8217;s machine. This is a great little command when you work with a repository that has many remote feature branches created and deleted on a regular basis. I usually run the command every few weeks but it really only needs to be run when you think you think your git closet needs a little _declutter_ing .  The syntax is a little cryptic, so it&#8217;s a good idea to <a href="http://davidwalsh.name/git-aliases">alias</a> it!</p>
+
+
+
+
+  
+
+
+
+</article>
+
+ 
+<section id="disqus">
+  <h1 class="indent title">Comments</h1>
+  <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+        
+        </div>
+        
+        
+        <aside id="sidebar" class="grid__item one-third lap-one-whole palm-one-whole">
+          <div class="grid">
+
+  
+<section class="social aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">
+    Follow me!
+  </h1>
+  <ul class="unstyled">
+    
+    
+    <li><a class="github" href="//github.com/craigerm"><i class="icon-github"></i> Github</a></li>
+    
+    
+    
+    
+    <li><a class="stackoverflow" href="//stackoverflow.com/users/64897"><i class="icon-stackexchange"></i> StackOverflow</a></li>
+    <li><a class="twitter" href="//twitter.com/craig_atc"><i class="icon-twitter"></i> Twitter</a></li>
+    
+  </ul>
+</section>
+
+  <section id="recent-posts" class="aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">Recent Posts</h1>
+  <ul class="divided">
+    
+      <li class="post">
+        <a href="/blog/2013/08/02/my-new-favourite-underscore-method-result/">My new favourite underscore method - .result()</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/29/a-handlebars-json-helper/">A Handlebars JSON helper</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/12/easily-disable-ubuntu-caps-lock/">Easily disable caps lock in Ubuntu 13.04</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/13/chrome-console-and-iframes/">Chrome console and iFrames</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/hire-problem-solvers-not-programmers/">Hire problem solvers not programmers</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/user-experience-is-attention-to-detail/">User experience is attention to detail</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/07/using-html5-local-storage-to-store-objects/">Using HTML5 local storage to store objects</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/email-obfuscator-for-octopress/">Email Obfuscator for Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-arrays/">Creating Javascript Arrays: new vs []</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-objects/">Creating Javascript Objects: new vs {}</a>
+      </li>
+    
+    <li class="post">
+      <a href="/blog/archives">More posts..</a>
+    </li>
+  </ul>
+</section>
+
+
+  <!--
+<section>
+	<span>
+		<img src="http://www.gravatar.com/avatar/c660428f970688482e160778cf0fef92" alt="Gravatar of Craig MacGregor " title="Gravatar of Craig MacGregor" />
+	</span>
+</section>
+
+<section id="recent-posts" class="aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">Recent Posts</h1>
+  <ul class="divided">
+    
+      <li class="post">
+        <a href="/blog/2013/08/02/my-new-favourite-underscore-method-result/">My new favourite underscore method - .result()</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/29/a-handlebars-json-helper/">A Handlebars JSON helper</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/12/easily-disable-ubuntu-caps-lock/">Easily disable caps lock in Ubuntu 13.04</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/13/chrome-console-and-iframes/">Chrome console and iFrames</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/hire-problem-solvers-not-programmers/">Hire problem solvers not programmers</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/user-experience-is-attention-to-detail/">User experience is attention to detail</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/07/using-html5-local-storage-to-store-objects/">Using HTML5 local storage to store objects</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/email-obfuscator-for-octopress/">Email Obfuscator for Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-arrays/">Creating Javascript Arrays: new vs []</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-objects/">Creating Javascript Objects: new vs {}</a>
+      </li>
+    
+    <li class="post">
+      <a href="/blog/archives">More posts..</a>
+    </li>
+  </ul>
+</section>
+
+<section id="github-repos" class="aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">
+    GitHub Repos
+    
+  </h1>
+  <ul id="gh_repos" class="divided">
+    <li class="loading">
+      <i class="icon-spinner icon-spin"></i>
+    </li>
+  </ul>
+</section>
+
+
+
+-->
+
+</div>
+
+        </aside>
+        
+      </div>
+    </div>
+    
+    <footer>
+      <div class="grid-wrapper">
+  <div class="grid">
+    <div class="grid__item">
+      <p class="copyright">
+  All content by Craig MacGregor and licenced under <a href="//creativecommons.org/licenses/by-nc-sa/3.0/ie/">Creative Commons</a>.<br>
+  Code under <a href="//github.com/coogie/oscailte/blob/master/README.md">MIT Licence</a>.
+</p>
+    </div>
+  </div>
+</div>
+
+    </footer>
+
+    <!--[if lt IE 7]>
+      <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="/javascripts/contact.js"></script>
+
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script defer src="/javascripts/octopress.js"></script>
+
+
+<script>
+  var _gaq=[['_setAccount','UA-37347861-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+
+
+<script>
+  var disqus_shortname = 'allthingscraig';
+  
+    
+    // var disqus_developer = 1;
+    var disqus_identifier = 'http://allthingscraig.com/blog/2012/01/25/remove-your-leftover-git-tracking-branches/';
+    var disqus_url = 'http://allthingscraig.com/blog/2012/01/25/remove-your-leftover-git-tracking-branches/';
+    var disqus_script = 'embed.js';
+  
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

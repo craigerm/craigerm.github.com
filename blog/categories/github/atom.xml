@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: github | all things craig]]></title>
+  <link href="http://allthingscraig.com/blog/categories/github/atom.xml" rel="self"/>
+  <link href="http://allthingscraig.com/"/>
+  <updated>2018-03-15T14:56:38-04:00</updated>
+  <id>http://allthingscraig.com/</id>
+  <author>
+    <name><![CDATA[Craig MacGregor]]></name>
+    <email><![CDATA[craigerm@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[Dark Octo Themes: Chrome extension for themed  github repositories]]></title>
+    <link href="http://allthingscraig.com/blog/2012/04/24/dark-octo-themes-chrome-extension-for-themed-github-repositories/"/>
+    <updated>2012-04-24T19:50:51-04:00</updated>
+    <id>http://allthingscraig.com/blog/2012/04/24/dark-octo-themes-chrome-extension-for-themed-github-repositories</id>
+    <content type="html"><![CDATA[<p>Whenever I code I always prefer to use a dark background theme, like vibrantink or the railscast theme. I just always feel at home with a dark background.</p>
+
+<p>If you're like me you probably spend a fair amount of time on github viewing open source projects . It's like a geek toy store - information overload!</p>
+
+<p>And if you're like me you wish that you could change the source code theme on github to a more familiar theme. Well now you can!</p>
+
+<p>Introducing a little Chrome extension I created called <a href="https://chrome.google.com/webstore/detail/iahjlgmjhgemeebaflejbgfpojahcnng?hl=en-GB">Dark Octo Themes</a>. This extension has one purpose: to show the source code in a modified theme while on github.</p>
+
+<p>{% img /images/posts/darkoctotheme.png %}</p>
+
+<h2>Installation</h2>
+
+<p>Search for <strong>Dark Octo Themes</strong> in the Chrome App store. Or if you want to install from source there are instructions on the github repository page <a href="https://github.com/craigerm/dark-octo-themes">here</a>.</p>
+
+<h2>First Impressions on Developing for Chrome</h2>
+
+<p>This extension was a result of a rainy, bored Sunday and my curiosity to see how simple it would be to implement a chrome extension. The learning curve was fairly low (assuming you are comfortable with javascript) because of how awesome the google docs are.</p>
+
+<p>The docs contain so much useful information and there are several examples of how to use different parts of the API - and they show you exactly which parts of the API are used in the example.</p>
+
+<p>The hardest part (and most time consuming!) was creating the icon and promotional images that are required when you upload to the app store. The experience was very painless though: pay your one time $5 registration fee (I would have paid $20 if I could use a few stock images :P), upload your sources, upload your icon/promotional images, and publish! Done!</p>
+
+<h2>Final Thoughts</h2>
+
+<p>It really wouldn't surprise me if github implements the ability to change the source code theme sometime in the not-to-distant future which would render this extension obsolete. Those guys are awesome, and the site just keeps getting better and better by the day it seems. But until then, I'll be using this <em>selfishly-created</em> :) extension.</p>
+
+<p>If you like this extension or have an idea for an improvement, feel free to let me know!</p>
+
+<h2>Resources</h2>
+
+<ul>
+<li><a href="https://github.com/craigerm/dark-octo-themes">Source code on github</a></li>
+<li><a href="https://chrome.google.com/webstore/detail/iahjlgmjhgemeebaflejbgfpojahcnng?hl=en-GB">Dark Octo Themes Chrome Extension</a></li>
+<li><a href="http://code.google.com/chrome/extensions/overview.html">Google Chrome Extensions Overview</a></li>
+</ul>
+
+]]></content>
+  </entry>
+  
+</feed>

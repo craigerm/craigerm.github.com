@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+
+  <title><![CDATA[Category: chrome | all things craig]]></title>
+  <link href="http://allthingscraig.com/blog/categories/chrome/atom.xml" rel="self"/>
+  <link href="http://allthingscraig.com/"/>
+  <updated>2018-03-15T14:56:38-04:00</updated>
+  <id>http://allthingscraig.com/</id>
+  <author>
+    <name><![CDATA[Craig MacGregor]]></name>
+    <email><![CDATA[craigerm@gmail.com]]></email>
+  </author>
+  <generator uri="http://octopress.org/">Octopress</generator>
+
+  
+  <entry>
+    <title type="html"><![CDATA[User experience is attention to detail]]></title>
+    <link href="http://allthingscraig.com/blog/2013/03/10/user-experience-is-attention-to-detail/"/>
+    <updated>2013-03-10T18:34:00-04:00</updated>
+    <id>http://allthingscraig.com/blog/2013/03/10/user-experience-is-attention-to-detail</id>
+    <content type="html"><![CDATA[<p>As developers we are constantly throwing together forms so user's can enter
+data. It's a fairly common task but because of this frequency we can forget to
+ask ourselves <strong>why</strong> when it comes to the decisions we have to make.
+Something as simple as which fields are mandatory can impact the user experience in a negative way
+if the different options are not considered.</p>
+
+<p>Take Chrome's <em>add bookmark</em> form for example.</p>
+
+<p>When you click the star in the address bar to bring up the dialog you are
+presented a form with two inputs: name and folder.</p>
+
+<p>{% img /images/posts/bookmark-added.png %}</p>
+
+<p>All too often a developer would decide that both inputs should be mandatory.
+Usually this would be fine since "Name" is probably mandatory 90% of the time.</p>
+
+<p>Blindly making something mandatory can have negative effects on the user
+experience. If this field was mandatory it would limit the real estate space on the Chrome
+bookmark bar - thus limiting it's usefulness.</p>
+
+<p>Since Google is great at building awesome user first interfaces (UFIs?) they took the
+time to make the decision that name can be optional.
+As a result you can have icons without names on your bookmark bar.
+Since most websites have favicons we can get more bookmarks on our toolbar than
+we could of with names beside the icons:</p>
+
+<p>{% img /images/posts/bookmarks-bar.png %}</p>
+
+<p>Since most users are familiar with app icons (via smartphones or whatever) our
+bookmark bar now looks like an app bar. Which is both intuitive and easy on the
+eyes.</p>
+
+<p>So remember this rule:</p>
+
+<p><em>If you are forcing a user to take an action you should
+first ask yourself why and consider what impact this will have on the overall user experience.</em></p>
+]]></content>
+  </entry>
+  
+</feed>

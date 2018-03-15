@@ -1,0 +1,623 @@
+
+
+<!doctype html>
+  <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+  <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+  <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+  <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Unit Testing jQuery Plugin Internals - all things craig</title>
+    <meta name="author" content="Craig MacGregor">
+    
+    <meta name="description" content="Unit Testing jQuery Plugin Internals Dec 23rd, 2012 jquery Anyone who has worked with me before knows that I am a big advocate of TDD. I find when I &hellip;">
+    
+    <meta name="viewport" content="width=device-width">
+    
+    <link rel="canonical" href="http://allthingscraig.com/blog/2012/12/23/unit-testing-jquery-plugin-internals">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet">
+    <link href="/http://feeds.feedburner.com/AllThingsCraig" rel="alternate" title="all things craig" type="application/atom+xml">
+  </head>
+
+
+  <body >
+
+    <header>
+      <div class="grid-wrapper">
+  <div class="grid">
+
+    <div class="grid__item two-fifths lap-four-sixths palm-one-whole">
+  <a href="/" class="site-title">all things craig</a>
+</div>
+
+<div class="grid__item three-fifths lap-two-sixths palm-one-whole">
+  <nav>
+    <input type="checkbox" id="toggle">
+<label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu"></label>
+<ul class="menu pull-right">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/">Blog</a></li>
+  <li><a href="/about/">About</a></li>
+  <li><a href="/contact/">Contact</a></li>
+</ul>
+
+  </nav>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+    <div class="grid-wrapper">
+      <div class="grid grid-center">
+        
+        <div class="grid__item two-thirds lap-one-whole palm-one-whole">
+        
+
+          <article class="post">
+  <header>
+  
+  <h1 class="title indent">Unit Testing jQuery Plugin Internals</h1>
+  
+
+  
+  <div class="meta clearfix">
+    
+
+
+
+
+
+
+
+
+  
+
+
+<time class="pull-left" datetime="2012-12-23T09:11:22-05:00" pubdate data-updated="true"><i class="icon-calendar"></i> Dec 23<span>rd</span>, 2012</time>
+    
+
+
+
+  
+  <div class="pull-left">
+    <i class="icon-tags"></i>
+    <ul class="tags unstyled">
+    
+      <li><a href="/blog/categories/jquery/">jquery</a></li>
+    
+    </ul>
+  </div>
+  
+
+    
+  </div>
+  
+</header>
+
+
+
+
+  <p>Anyone who has worked with me before knows that I am a big advocate of TDD. I find when I start with TDD it&#8217;s often hard to move away from it and conversely if I don&#8217;t start with it it&#8217;s hard to move towards it later.</p>
+
+<p>Lately I&#8217;ve been writing several jQuery plugins - both simple and complex. One in particular was a calculation plugin that had dozens of complicated calculations and edge cases. So let&#8217;s see how I would go about writing a jQuery plugin using TDD and <a href="http://pivotal.github.com/jasmine/">jasmine</a> as the testing framework for a simplified calculator plugin.</p>
+
+<h2>Writing a test</h2>
+
+<p>Let&#8217;s say we need a function that checks if a number is even. So let&#8217;s write the test:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;calculator&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">describe</span><span class="p">(</span><span class="s1">&#39;isEven()&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="c1">// What should our test look like ?</span>
+</span><span class='line'>   <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return true for even numbers&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>     <span class="c1">// #1 Add to global namespace?</span>
+</span><span class='line'>     <span class="nx">expect</span><span class="p">(</span><span class="nb">window</span><span class="p">.</span><span class="nx">isEven</span><span class="p">(</span><span class="mi">2</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>     <span class="c1">// #2 Add to jQuery namespace?</span>
+</span><span class='line'>     <span class="nx">expect</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">isEven</span><span class="p">(</span><span class="mi">2</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>     <span class="c1">// #3 Make plugin add a static jQuery object that has the methods we need</span>
+</span><span class='line'>     <span class="nx">expect</span><span class="p">(</span><span class="nx">$</span><span class="p">.</span><span class="nx">calculator</span><span class="p">.</span><span class="nx">isEven</span><span class="p">(</span><span class="mi">2</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>     <span class="c1">// #4 ??</span>
+</span><span class='line'>   <span class="p">});</span>
+</span><span class='line'>  <span class="p">});</span>
+</span><span class='line'><span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Create plugin</h2>
+
+<p>We use this standard format for a jQuery plugin:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">calculator</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>     <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>       <span class="c1">// code</span>
+</span><span class='line'>     <span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">})(</span><span class="nx">jQuery</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Requirements</h2>
+
+<p>So what exactly do we want this to look like? Well there are some simple requirements I like to have.</p>
+
+<ol>
+<li>Each plugin should not add anything to the global (window) object (This rules out #1)</li>
+<li>Each plugin should only add one object or function to the jQuery namespace (This rules out #2 and #3)</li>
+<li>Easily make new functions testable</li>
+</ol>
+
+
+<p>So that just leaves #4. But what could that be.</p>
+
+<h2>Using a global object for tests</h2>
+
+<p>The first approach I tried was creating a global object (I know, I know&#8230;) before the script was included and add the methods to this object. So let&#8217;s write what our test body should look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return true for even numbers&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>   <span class="nx">expect</span><span class="p">(</span><span class="nx">container</span><span class="p">.</span><span class="nx">isEven</span><span class="p">(</span><span class="mi">2</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>We would change our html test runner to look something like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='html'><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span><span class="nt">&gt;</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">container</span> <span class="o">=</span> <span class="p">{};</span> <span class="c1">// adds to global namespace</span>
+</span><span class='line'><span class="nt">&lt;/script&gt;</span>
+</span><span class='line'>
+</span><span class='line'><span class="nt">&lt;script </span><span class="na">type=</span><span class="s">&quot;text/javascript&quot;</span> <span class="na">src=</span><span class="s">&quot;calculator.plugin.js&quot;</span><span class="nt">&gt;&lt;/script&gt;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And our plugin now looks like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">,</span> <span class="nx">container</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="nx">container</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">isEven</span> <span class="o">=</span> <span class="nx">container</span><span class="p">.</span><span class="nx">isEven</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">calculator</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// code</span>
+</span><span class='line'>    <span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">})(</span><span class="nx">jQuery</span><span class="p">,</span> <span class="nx">container</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>So what exactly is happening here? Well our unit test is using a global variable to access the internal functions of the jQuery plugin. Next we declare this variable in our test runner so we can access it, but for usage in our application this variable won&#8217;t exist. Finally our plugin assigns whatever functions we need to this object. There&#8217;s still the problem of possibly having a conflict with the global variable - just one reason why global variables are bad and should be avoided.</p>
+
+<h2>Using the plugins jQuery&#8217;s data object to store internal functions</h2>
+
+<p>A second approach is to utilize the jQuery data object:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">internals</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">isEven</span> <span class="o">=</span> <span class="nx">internals</span><span class="p">.</span><span class="nx">isEven</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">calculator</span> <span class="o">=</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// code</span>
+</span><span class='line'>
+</span><span class='line'>      <span class="c1">// Add internal methods to do data</span>
+</span><span class='line'>     <span class="nx">$</span><span class="p">(</span><span class="k">this</span><span class="p">).</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;internals&#39;</span><span class="p">,</span> <span class="nx">internals</span><span class="p">);</span>
+</span><span class='line'>   <span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">})(</span><span class="nx">jQuery</span><span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Our test body would now look like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="kd">var</span> <span class="nx">internals</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#fakeId&#39;</span><span class="p">).</span><span class="nx">calculator</span><span class="p">().</span><span class="nx">data</span><span class="p">(</span><span class="s1">&#39;internals&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return true for even numbers&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">expect</span><span class="p">(</span><span class="nx">internals</span><span class="p">.</span><span class="nx">isEven</span><span class="p">(</span><span class="mi">2</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>This approach meets our requirements and doesn&#8217;t utilize a global variable for testing purposes. You can make the argument that if a plugin doesn&#8217;t expose the method it does not need to be tested. I don&#8217;t fully agree with this because the usage of the plugin API could be considered more of an integration test since we are integrating with our client code (i.e. the HTML page). Sometimes plugins contain logic that should be fully unit testable because there are complicated cases. In this case we are adding an extra step in the plugin but I think the benefits outweigh the overhead.</p>
+
+<h2>Returning internals as an option to the plugin</h2>
+
+<p>Alternatively instead of adding to each object&#8217;s data (not a good idea if plugin is used for several elements on a page) we can do something similar by passing in a string to the plugin that would return the object instead of using the data object. This is the approach I am currently using on a few plugins:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+<span class='line-number'>17</span>
+<span class='line-number'>18</span>
+<span class='line-number'>19</span>
+<span class='line-number'>20</span>
+<span class='line-number'>21</span>
+<span class='line-number'>22</span>
+<span class='line-number'>23</span>
+<span class='line-number'>24</span>
+<span class='line-number'>25</span>
+<span class='line-number'>26</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span><span class="nx">$</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">internals</span> <span class="o">=</span> <span class="p">{}</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">isEven</span> <span class="o">=</span> <span class="nx">internals</span><span class="p">.</span><span class="nx">isEven</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">num</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">return</span> <span class="nx">num</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span><span class="p">;</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">$</span><span class="p">.</span><span class="nx">fn</span><span class="p">.</span><span class="nx">calculator</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">option</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>    <span class="k">if</span><span class="p">(</span><span class="nx">option</span> <span class="o">===</span> <span class="s1">&#39;internals&#39;</span><span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>       <span class="k">return</span> <span class="nx">internals</span><span class="p">;</span>
+</span><span class='line'>    <span class="p">}</span>
+</span><span class='line'>    <span class="c1">// you could simplify this and add options for each method if you prefer like this:</span>
+</span><span class='line'>    <span class="c1">// if(option === &#39;isEven&#39;) return isEven;</span>
+</span><span class='line'>
+</span><span class='line'>    <span class="k">return</span> <span class="k">this</span><span class="p">.</span><span class="nx">each</span><span class="p">(</span><span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>      <span class="c1">// code</span>
+</span><span class='line'>   <span class="p">});</span>
+</span><span class='line'>  <span class="p">};</span>
+</span><span class='line'><span class="p">})(</span><span class="nx">jQuery</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="c1">// Test body would be this:</span>
+</span><span class='line'>  <span class="kd">var</span> <span class="nx">internals</span> <span class="o">=</span> <span class="nx">$</span><span class="p">(</span><span class="s1">&#39;#fakeId&#39;</span><span class="p">).</span><span class="nx">calculator</span><span class="p">(</span><span class="s1">&#39;internals&#39;</span><span class="p">);</span>
+</span><span class='line'>
+</span><span class='line'>  <span class="nx">it</span><span class="p">(</span><span class="s1">&#39;should return true for even numbers&#39;</span><span class="p">,</span> <span class="kd">function</span><span class="p">()</span> <span class="p">{</span>
+</span><span class='line'>    <span class="nx">expect</span><span class="p">(</span><span class="nx">internals</span><span class="p">.</span><span class="nx">isEven</span><span class="p">(</span><span class="mi">2</span><span class="p">)).</span><span class="nx">toBe</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+</span><span class='line'>  <span class="p">});</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>More complicated approach</h2>
+
+<p>In larger plugins it might be better to use a CLI tool to build the plugin so that we don&#8217;t have the anonymous function wrapper included when testing. For example the jQuery source does something like this. The have an intro file, several body files, and an outro file.</p>
+
+<p>The intro.js file looks like:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="p">(</span><span class="kd">function</span><span class="p">(</span> <span class="nb">window</span><span class="p">,</span> <span class="kc">undefined</span> <span class="p">)</span> <span class="p">{</span>
+</span><span class='line'>  <span class="s2">&quot;use strict&quot;</span><span class="p">;</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>And here&#8217;s the outro.js file:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'>  <span class="p">})(</span> <span class="nb">window</span> <span class="p">);</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>They get appended together to build the jQuery source that we know and love. It&#8217;s a very useful technique if you&#8217;re building a larger plugin or framework.</p>
+
+<h2>Conclusion</h2>
+
+<p>As with anything there&#8217;s so silver bullet. I&#8217;m still not completely sure this is the cleanest approach to testing these internal methods, but I&#8217;m liking it so far. Allowing access to the internal functions in my unit tests without cluttering up the global window object gives me the flexibility I need to use a complete TDD approach to building jQuery plugins.</p>
+
+<p>If you have any other ways of doing this I would love to hear about them! Happy Coding!</p>
+
+
+
+
+  
+
+
+
+</article>
+
+ 
+<section id="disqus">
+  <h1 class="indent title">Comments</h1>
+  <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+        
+        </div>
+        
+        
+        <aside id="sidebar" class="grid__item one-third lap-one-whole palm-one-whole">
+          <div class="grid">
+
+  
+<section class="social aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">
+    Follow me!
+  </h1>
+  <ul class="unstyled">
+    
+    
+    <li><a class="github" href="//github.com/craigerm"><i class="icon-github"></i> Github</a></li>
+    
+    
+    
+    
+    <li><a class="stackoverflow" href="//stackoverflow.com/users/64897"><i class="icon-stackexchange"></i> StackOverflow</a></li>
+    <li><a class="twitter" href="//twitter.com/craig_atc"><i class="icon-twitter"></i> Twitter</a></li>
+    
+  </ul>
+</section>
+
+  <section id="recent-posts" class="aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">Recent Posts</h1>
+  <ul class="divided">
+    
+      <li class="post">
+        <a href="/blog/2013/08/02/my-new-favourite-underscore-method-result/">My new favourite underscore method - .result()</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/29/a-handlebars-json-helper/">A Handlebars JSON helper</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/12/easily-disable-ubuntu-caps-lock/">Easily disable caps lock in Ubuntu 13.04</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/13/chrome-console-and-iframes/">Chrome console and iFrames</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/hire-problem-solvers-not-programmers/">Hire problem solvers not programmers</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/user-experience-is-attention-to-detail/">User experience is attention to detail</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/07/using-html5-local-storage-to-store-objects/">Using HTML5 local storage to store objects</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/email-obfuscator-for-octopress/">Email Obfuscator for Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-arrays/">Creating Javascript Arrays: new vs []</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-objects/">Creating Javascript Objects: new vs {}</a>
+      </li>
+    
+    <li class="post">
+      <a href="/blog/archives">More posts..</a>
+    </li>
+  </ul>
+</section>
+
+
+  <!--
+<section>
+	<span>
+		<img src="http://www.gravatar.com/avatar/c660428f970688482e160778cf0fef92" alt="Gravatar of Craig MacGregor " title="Gravatar of Craig MacGregor" />
+	</span>
+</section>
+
+<section id="recent-posts" class="aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">Recent Posts</h1>
+  <ul class="divided">
+    
+      <li class="post">
+        <a href="/blog/2013/08/02/my-new-favourite-underscore-method-result/">My new favourite underscore method - .result()</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/29/a-handlebars-json-helper/">A Handlebars JSON helper</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/12/easily-disable-ubuntu-caps-lock/">Easily disable caps lock in Ubuntu 13.04</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/13/chrome-console-and-iframes/">Chrome console and iFrames</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/hire-problem-solvers-not-programmers/">Hire problem solvers not programmers</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/user-experience-is-attention-to-detail/">User experience is attention to detail</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/07/using-html5-local-storage-to-store-objects/">Using HTML5 local storage to store objects</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/email-obfuscator-for-octopress/">Email Obfuscator for Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-arrays/">Creating Javascript Arrays: new vs []</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-objects/">Creating Javascript Objects: new vs {}</a>
+      </li>
+    
+    <li class="post">
+      <a href="/blog/archives">More posts..</a>
+    </li>
+  </ul>
+</section>
+
+<section id="github-repos" class="aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">
+    GitHub Repos
+    
+  </h1>
+  <ul id="gh_repos" class="divided">
+    <li class="loading">
+      <i class="icon-spinner icon-spin"></i>
+    </li>
+  </ul>
+</section>
+
+
+
+-->
+
+</div>
+
+        </aside>
+        
+      </div>
+    </div>
+    
+    <footer>
+      <div class="grid-wrapper">
+  <div class="grid">
+    <div class="grid__item">
+      <p class="copyright">
+  All content by Craig MacGregor and licenced under <a href="//creativecommons.org/licenses/by-nc-sa/3.0/ie/">Creative Commons</a>.<br>
+  Code under <a href="//github.com/coogie/oscailte/blob/master/README.md">MIT Licence</a>.
+</p>
+    </div>
+  </div>
+</div>
+
+    </footer>
+
+    <!--[if lt IE 7]>
+      <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="/javascripts/contact.js"></script>
+
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script defer src="/javascripts/octopress.js"></script>
+
+
+<script>
+  var _gaq=[['_setAccount','UA-37347861-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+
+
+<script>
+  var disqus_shortname = 'allthingscraig';
+  
+    
+    // var disqus_developer = 1;
+    var disqus_identifier = 'http://allthingscraig.com/blog/2012/12/23/unit-testing-jquery-plugin-internals/';
+    var disqus_url = 'http://allthingscraig.com/blog/2012/12/23/unit-testing-jquery-plugin-internals/';
+    var disqus_script = 'embed.js';
+  
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>

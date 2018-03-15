@@ -1,0 +1,453 @@
+
+
+<!doctype html>
+  <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+  <!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+  <!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+  <!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>How to achieve rails like resources in node.js express - all things craig</title>
+    <meta name="author" content="Craig MacGregor">
+    
+    <meta name="description" content="How to achieve rails like resources in node.js express Jan 29th, 2012 nodejs I&#8217;ve been playing around with Node.js lately by building some &hellip;">
+    
+    <meta name="viewport" content="width=device-width">
+    
+    <link rel="canonical" href="http://allthingscraig.com/blog/2012/01/29/how-to-achieve-rails-like-resources-in-node-js-express">
+    <link href="/favicon.png" rel="icon">
+    <link href="/stylesheets/screen.css" media="screen, projection" rel="stylesheet">
+    <link href="/http://feeds.feedburner.com/AllThingsCraig" rel="alternate" title="all things craig" type="application/atom+xml">
+  </head>
+
+
+  <body >
+
+    <header>
+      <div class="grid-wrapper">
+  <div class="grid">
+
+    <div class="grid__item two-fifths lap-four-sixths palm-one-whole">
+  <a href="/" class="site-title">all things craig</a>
+</div>
+
+<div class="grid__item three-fifths lap-two-sixths palm-one-whole">
+  <nav>
+    <input type="checkbox" id="toggle">
+<label for="toggle" class="toggle" data-open="Main Menu" data-close="Close Menu"></label>
+<ul class="menu pull-right">
+  <li><a href="/">Home</a></li>
+  <li><a href="/blog/">Blog</a></li>
+  <li><a href="/about/">About</a></li>
+  <li><a href="/contact/">Contact</a></li>
+</ul>
+
+  </nav>
+</div>
+
+  </div>
+</div>
+    </header>
+
+    
+
+    <div class="grid-wrapper">
+      <div class="grid grid-center">
+        
+        <div class="grid__item two-thirds lap-one-whole palm-one-whole">
+        
+
+          <article class="post">
+  <header>
+  
+  <h1 class="title indent">How to achieve rails like resources in node.js express</h1>
+  
+
+  
+  <div class="meta clearfix">
+    
+
+
+
+
+
+
+
+
+  
+
+
+<time class="pull-left" datetime="2012-01-29T19:59:10-05:00" pubdate data-updated="true"><i class="icon-calendar"></i> Jan 29<span>th</span>, 2012</time>
+    
+
+
+
+  
+  <div class="pull-left">
+    <i class="icon-tags"></i>
+    <ul class="tags unstyled">
+    
+      <li><a href="/blog/categories/nodejs/">nodejs</a></li>
+    
+    </ul>
+  </div>
+  
+
+    
+  </div>
+  
+</header>
+
+
+
+
+  <p>I&#8217;ve been playing around with <a href="http://nodejs.org/">Node.js</a> lately by building some prototypes. I&#8217;ve been using <a href="http://expressjs.com/">express</a> as my web framework and have really enjoyed the experience so far.</p>
+
+<p>One thing that I do miss from Rails is to be able to easily map a controller&#8217;s CRUD actions to the conventional matching routes. Learn more about rails routing <a href="http://guides.rubyonrails.org/routing.html">here</a> if you are not familiar.</p>
+
+<p>Let&#8217;s say you have a &#8220;task&#8221; controller with all seven mappable actions defined. In rails you would do something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+</pre></td><td class='code'><pre><code class='ruby'><span class='line'><span class="n">resources</span> <span class="ss">:tasks</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>In express it appears that you would have to do this manually. Inside your app.js file you would have the following code:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./routes/tasks.js&#39;</span><span class="p">)</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/tasks&#39;</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">index</span><span class="p">);</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/tasks/new&#39;</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">.</span><span class="k">new</span><span class="p">);</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/tasks/create&#39;</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">create</span><span class="p">)</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/tasks/show&#39;</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">show</span><span class="p">)</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/tasks/edit&#39;</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">edit</span><span class="p">)</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/tasks/update&#39;</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">update</span><span class="p">)</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">post</span><span class="p">(</span><span class="s1">&#39;/tasks/destroy&#39;</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">destroy</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Dry routing in express</h2>
+
+<p>When experimenting with node and express I had to do the following for a couple of different controllers and duplication started to creep into my code. I&#8217;m a strong believer in the <a href="http://en.wikipedia.org/wiki/Don%27t_repeat_yourself">DRY</a> principle and I even apply that when learning a new language or framework. Even when experimenting with new technology applying the DRY pinciple allows you to solve an actual problem and look into the language/framework instead of working at a &#8220;hello world&#8221; level. I find solving an actual problem speeds up the learning curve and in the end is also more fun. Maybe that&#8217;s a post for a future date :).</p>
+
+<p>Anyways to emulate the rails routing behavior in express I&#8217;ve created a quick helper that can be used. It is called &#8220;autoresources&#8221; and can map a controller&#8217;s actions just like rails does.</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">app</span> <span class="o">=</span> <span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="nx">express</span><span class="p">.</span><span class="nx">createServer</span><span class="p">();</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">resources</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./utils/autoresources.js&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="nx">resources</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="s1">&#39;tasks&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Side note: I&#8217;m hesitant to call the express &#8220;routing handlers&#8221; controllers in the way that rails calls their controllers controllers, but for this post we&#8217;ll treat them as the same. And actions and functions will be interchangeable.</p>
+
+<p>The call to resources.map() will look for the file &#8220;APP_HOME/routes/tasks.js&#8221; and then check for functions that can be auto mapped to routes. Only functions that exist in your controller will be auto mapped. For example if you don&#8217;t have a destroy function in your controller then no route will be added for destroy.</p>
+
+<p>Your route handler should look something like this:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+<span class='line-number'>3</span>
+<span class='line-number'>4</span>
+<span class='line-number'>5</span>
+<span class='line-number'>6</span>
+<span class='line-number'>7</span>
+<span class='line-number'>8</span>
+<span class='line-number'>9</span>
+<span class='line-number'>10</span>
+<span class='line-number'>11</span>
+<span class='line-number'>12</span>
+<span class='line-number'>13</span>
+<span class='line-number'>14</span>
+<span class='line-number'>15</span>
+<span class='line-number'>16</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// Actions supported mapped to GET:</span>
+</span><span class='line'><span class="c1">//   =&gt; index, new, show, edit</span>
+</span><span class='line'><span class="c1">// Actions supported mapped to POST</span>
+</span><span class='line'><span class="c1">//   =&gt; create, update, destroy</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">exports</span><span class="p">.</span><span class="nx">index</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+</span><span class='line'>  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Index action called&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">exports</span><span class="p">.</span><span class="k">new</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span> <span class="nx">res</span><span class="p">){</span>
+</span><span class='line'>   <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;New action called&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span><span class='line'>
+</span><span class='line'><span class="nx">exports</span><span class="p">.</span><span class="nx">create</span> <span class="o">=</span> <span class="kd">function</span><span class="p">(</span><span class="nx">req</span><span class="p">,</span><span class="nx">res</span><span class="p">){</span>
+</span><span class='line'>  <span class="nx">res</span><span class="p">.</span><span class="nx">send</span><span class="p">(</span><span class="s1">&#39;Create action called&#39;</span><span class="p">);</span>
+</span><span class='line'><span class="p">}</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Adding routes to other controller actions</h2>
+
+<p>The map function also returns the javascript exports for that file. The exports can be used the same way just as if you did a &#8220;require&#8221; on the file yourself.
+For example, let&#8217;s say our tasks.js file had another function called &#8220;recent&#8221; to show the recent tasks that need to be completed. In our app.js file we would then do the following:</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="kd">var</span> <span class="nx">tasks</span> <span class="o">=</span> <span class="nx">resources</span><span class="p">.</span><span class="nx">map</span><span class="p">(</span><span class="nx">app</span><span class="p">,</span> <span class="s1">&#39;tasks&#39;</span><span class="p">)</span>
+</span><span class='line'><span class="nx">app</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="s1">&#39;/recent&#39;</span><span class="p">,</span> <span class="nx">tasks</span><span class="p">.</span><span class="nx">recent</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<h2>Installation</h2>
+
+<p>I might add this as a node package in the next few days but for now you can grab the source code for this at <a href="https://github.com/craigerm/autoresources">my github page</a>. To use this code just copy it (it&#8217;s just one file) to your project directly. Then just require it from your app.js file</p>
+
+<figure class='code'><figcaption><span></span></figcaption><div class="highlight"><table><tr><td class="gutter"><pre class="line-numbers"><span class='line-number'>1</span>
+<span class='line-number'>2</span>
+</pre></td><td class='code'><pre><code class='javascript'><span class='line'><span class="c1">// Change the path to wherever you copied your file</span>
+</span><span class='line'><span class="kd">var</span> <span class="nx">resources</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">&#39;./utils/autoresources.js&#39;</span><span class="p">)</span>
+</span></code></pre></td></tr></table></div></figure>
+
+
+<p>Hopefully this will be useful for some people out there. I will probably have more to talk about with node in the next few months since I am finding it to very interesting and fun to work with. Remember how much fun you had when you first discovered rails?</p>
+
+
+
+
+  
+
+
+
+</article>
+
+ 
+<section id="disqus">
+  <h1 class="indent title">Comments</h1>
+  <div id="disqus_thread" aria-live="polite"><noscript>Please enable JavaScript to view the <a href="http://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+</section>
+
+        
+        </div>
+        
+        
+        <aside id="sidebar" class="grid__item one-third lap-one-whole palm-one-whole">
+          <div class="grid">
+
+  
+<section class="social aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">
+    Follow me!
+  </h1>
+  <ul class="unstyled">
+    
+    
+    <li><a class="github" href="//github.com/craigerm"><i class="icon-github"></i> Github</a></li>
+    
+    
+    
+    
+    <li><a class="stackoverflow" href="//stackoverflow.com/users/64897"><i class="icon-stackexchange"></i> StackOverflow</a></li>
+    <li><a class="twitter" href="//twitter.com/craig_atc"><i class="icon-twitter"></i> Twitter</a></li>
+    
+  </ul>
+</section>
+
+  <section id="recent-posts" class="aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">Recent Posts</h1>
+  <ul class="divided">
+    
+      <li class="post">
+        <a href="/blog/2013/08/02/my-new-favourite-underscore-method-result/">My new favourite underscore method - .result()</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/29/a-handlebars-json-helper/">A Handlebars JSON helper</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/12/easily-disable-ubuntu-caps-lock/">Easily disable caps lock in Ubuntu 13.04</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/13/chrome-console-and-iframes/">Chrome console and iFrames</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/hire-problem-solvers-not-programmers/">Hire problem solvers not programmers</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/user-experience-is-attention-to-detail/">User experience is attention to detail</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/07/using-html5-local-storage-to-store-objects/">Using HTML5 local storage to store objects</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/email-obfuscator-for-octopress/">Email Obfuscator for Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-arrays/">Creating Javascript Arrays: new vs []</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-objects/">Creating Javascript Objects: new vs {}</a>
+      </li>
+    
+    <li class="post">
+      <a href="/blog/archives">More posts..</a>
+    </li>
+  </ul>
+</section>
+
+
+  <!--
+<section>
+	<span>
+		<img src="http://www.gravatar.com/avatar/c660428f970688482e160778cf0fef92" alt="Gravatar of Craig MacGregor " title="Gravatar of Craig MacGregor" />
+	</span>
+</section>
+
+<section id="recent-posts" class="aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">Recent Posts</h1>
+  <ul class="divided">
+    
+      <li class="post">
+        <a href="/blog/2013/08/02/my-new-favourite-underscore-method-result/">My new favourite underscore method - .result()</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/29/a-handlebars-json-helper/">A Handlebars JSON helper</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/07/12/easily-disable-ubuntu-caps-lock/">Easily disable caps lock in Ubuntu 13.04</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/13/chrome-console-and-iframes/">Chrome console and iFrames</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/12/hire-problem-solvers-not-programmers/">Hire problem solvers not programmers</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/03/10/user-experience-is-attention-to-detail/">User experience is attention to detail</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/07/using-html5-local-storage-to-store-objects/">Using HTML5 local storage to store objects</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/email-obfuscator-for-octopress/">Email Obfuscator for Octopress</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-arrays/">Creating Javascript Arrays: new vs []</a>
+      </li>
+    
+      <li class="post">
+        <a href="/blog/2013/01/02/creating-javascript-objects/">Creating Javascript Objects: new vs {}</a>
+      </li>
+    
+    <li class="post">
+      <a href="/blog/archives">More posts..</a>
+    </li>
+  </ul>
+</section>
+
+<section id="github-repos" class="aside-module grid__item one-whole lap-one-half">
+  <h1 class="title delta">
+    GitHub Repos
+    
+  </h1>
+  <ul id="gh_repos" class="divided">
+    <li class="loading">
+      <i class="icon-spinner icon-spin"></i>
+    </li>
+  </ul>
+</section>
+
+
+
+-->
+
+</div>
+
+        </aside>
+        
+      </div>
+    </div>
+    
+    <footer>
+      <div class="grid-wrapper">
+  <div class="grid">
+    <div class="grid__item">
+      <p class="copyright">
+  All content by Craig MacGregor and licenced under <a href="//creativecommons.org/licenses/by-nc-sa/3.0/ie/">Creative Commons</a>.<br>
+  Code under <a href="//github.com/coogie/oscailte/blob/master/README.md">MIT Licence</a>.
+</p>
+    </div>
+  </div>
+</div>
+
+    </footer>
+
+    <!--[if lt IE 7]>
+      <p class="chromeframe">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">activate Google Chrome Frame</a> to improve your experience.</p>
+    <![endif]-->
+
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.0/jquery.min.js"></script>
+<script src="/javascripts/contact.js"></script>
+
+<script src="//crypto-js.googlecode.com/svn/tags/3.1.2/build/rollups/md5.js"></script>
+<script defer src="/javascripts/octopress.js"></script>
+
+
+<script>
+  var _gaq=[['_setAccount','UA-37347861-1'],['_trackPageview']];
+  (function(d,t){var g=d.createElement(t),s=d.getElementsByTagName(t)[0];
+  g.src=('https:'==location.protocol?'//ssl':'//www')+'.google-analytics.com/ga.js';
+  s.parentNode.insertBefore(g,s)}(document,'script'));
+</script>
+
+
+
+<script>
+  var disqus_shortname = 'allthingscraig';
+  
+    
+    // var disqus_developer = 1;
+    var disqus_identifier = 'http://allthingscraig.com/blog/2012/01/29/how-to-achieve-rails-like-resources-in-node-js-express/';
+    var disqus_url = 'http://allthingscraig.com/blog/2012/01/29/how-to-achieve-rails-like-resources-in-node-js-express/';
+    var disqus_script = 'embed.js';
+  
+  (function () {
+    var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
+    dsq.src = '//' + disqus_shortname + '.disqus.com/' + disqus_script;
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+  }());
+</script>
+
+
+
+
+
+
+
+
+
+
+  </body>
+</html>
